@@ -3325,7 +3325,8 @@ def from_pytorch(script_module, input_infos, custom_convert_map=None, default_dt
     quantized_ops = set(["aten::quantize_per_tensor", "quantized::linear_dynamic"])
     if len(quantized_ops.intersection(set(op_names))) > 0:
         weight_quant_params = qnn_torch.get_weight_quant_params(script_module)
-        qnn_torch.add_input_quant_params_to_op_inputs(graph)
+        if "aten::quantize_per_tensor" in set(op_names):
+            qnn_torch.add_input_quant_params_to_op_inputs(graph)
         qnn_torch.add_quant_params_to_outputs(outputs, packed_param_map, weight_quant_params)
         qnn_torch.add_quant_params(tvm_params, weight_quant_params)
         converter.update_convert_map(qnn_torch.convert_map)
