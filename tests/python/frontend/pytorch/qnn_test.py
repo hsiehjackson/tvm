@@ -513,9 +513,10 @@ def test_quantize_dynamic():
         def __init__(self, in_dim, hidden_dim):
             super().__init__()
             self.linear = nn.Linear(in_dim, hidden_dim)
+            self.relu = nn.ReLU()
 
         def forward(self, inp):
-            return self.linear(inp)
+            return self.relu(self.linear(inp))
 
     torch.manual_seed(0)
     mod = LinearWrapper(16, 32)
